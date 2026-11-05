@@ -1,0 +1,1 @@
+export function Loading({children="Loading…"}){return <p className="loading">{children}</p>} export function ErrorBox({message}){return <p className="error">Unable to load data: {message}</p>} export function Empty(){return <p className="empty">No matching products. Try changing your search or filters.</p>}
