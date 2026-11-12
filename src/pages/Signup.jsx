@@ -1,0 +1,9 @@
+import { useState } from "react";
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext.jsx";
+export default function Signup(){
+  const {user,signup,error,clearError,loading,firebaseReady}=useAuth();const [email,setEmail]=useState("");const [password,setPassword]=useState("");const [confirm,setConfirm]=useState("");const [localError,setLocalError]=useState("");const [busy,setBusy]=useState(false);const navigate=useNavigate();
+  if(loading)return <p className="loading">Checking session…</p>;if(user)return <Navigate to="/profile" replace/>;
+  async function submit(e){e.preventDefault();clearError();setLocalError("");if(password.length<6){setLocalError("Password must contain at least 6 characters.");return;}if(password!==confirm){setLocalError("Passwords do not match.");return;}setBusy(true);try{await signup(email,password);navigate("/profile",{replace:true});}catch{}finally{setBusy(false);}}
+  return <section className="login"><small>JOIN PRODUCTHUB</small><h1>Create account</h1><p>Register with your email and password.</p>{(localError||error)&&<p className="error">{localError||error}</p>}<form onSubmit={submit}><label>Email<input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="name@example.com" required/></label><label>Password<input type="password" value={password} onChange={e=>setPassword(e.target.value)} minLength="6" required placeholder="At least 6 characters"/></label><label>Confirm password<input type="password" value={confirm} onChange={e=>setConfirm(e.target.value)} required placeholder="Repeat password"/></label><button className="btn" disabled={busy||!firebaseReady}>{busy?"Creating account…":"Create account"}</button></form><p className="auth-switch">Already registered? <Link to="/login">Sign in</Link></p></section>;
+}
